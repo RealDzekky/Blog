@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
@@ -36,5 +37,15 @@ class Post extends Model
 
     public function likes(){
         return $this->hasMany(Like::class);
+    }
+
+    public function authHasLiked(): Attribute
+    {
+        return Attribute::get(function () {
+                if (Auth::check()) {
+                    return $this->likes()->where('user_id', Auth::user()->id)->exists();
+                 }
+                 return false;
+         });
     }
 }

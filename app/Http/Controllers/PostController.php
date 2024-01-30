@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
-use App\Models\Image;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PostController extends Controller
@@ -15,8 +15,8 @@ class PostController extends Controller
      */
     public function index()
     {
-       $posts = Post::latest()->paginate();
-       return view('posts.index', compact('posts'));
+        $posts = Post::latest()->paginate();
+        return view('posts.index', compact('posts'));
     }
 
     /**
@@ -35,9 +35,11 @@ class PostController extends Controller
         $post = new Post($request->validated());
         // $post->title = $request->validated('title');
         // $post->body = $request->validated('body');
+        //$post->image = $request->file('image')->store('public');
         $post->user()->associate(auth()->user());
         $post->save();
-        foreach($request->file('images') as $file){
+        //dd($request->files);
+        foreach ($request->file('images') as $file) {
             $image = new Image();
             $image->path = $file;
             $image->post()->associate($post);
@@ -51,7 +53,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view('posts.show', compact('post'));
     }
 
     /**
