@@ -17,8 +17,14 @@ class PublicController extends Controller
         return view('welcome', compact('posts'));
     }
 
-    public function feed(){
-        $posts = Post::whereIn('user_id', auth()->user()->followees->pluck('id')->toArray())->latest()->paginate(16);
+    public function feed()
+    {
+
+        $posts = Post::whereIn(
+            'user_id',
+            auth()->user()->followees->pluck('id')->toArray()
+        )->latest()->paginate(16);
+        //dd($posts->toArray());
         return view('welcome', compact('posts'));
     }
 
@@ -44,25 +50,25 @@ class PublicController extends Controller
             $like->post()->associate($post);
             $like->user()->associate(auth()->user());
             $like->save();
-        }else{
+        } else {
             $like->delete();
         }
         return redirect()->back();
     }
 
-    public function user(User $user){
-        $posts = Post::latest()->where('user_id', $user->id)->paginate(16);
-        return view('user', compact('user', 'posts'));
+    public function user(User $user)
+    {
+        $posts = $user->posts()->paginate(10);
+        return view('user', compact('user', "posts"));
     }
+
     public function follow(User $user)
     {
-       if (!$user->authHasFollowed) {
+        if (!$user->authHasFollowed) {
             $user->followers()->attach(auth()->user());
-        }else{
-
+        } else {
             $user->followers()->detach(auth()->user());
         }
         return redirect()->back();
     }
-
 }

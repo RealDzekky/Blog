@@ -7,11 +7,12 @@
                 <h2 class="card-title">{{ $user->name }}</h2>
                 <p>Followers: {{ $user->followers->count() }}</p>
                 <p>Following: {{ $user->followees->count() }}</p>
-                <a href="{{route('follow', ['user' => $user])}}">
-                @if ($user->authHasFollowed)
-                    <button class="btn btn-error">Unfollow</button>
+                <a href="{{route('follow', ['user'=> $user])}}"
+                class="btn {{$user->authHasFollowed ? 'btn-error' : 'btn-success'}}">
+                @if($user->authHasFollowed)
+                Unfollow
                 @else
-                    <button class="btn btn-primary">Follow</button>
+                Follow
                 @endif
                 </a>
             </div>
