@@ -36,6 +36,7 @@ Route::get('/user/{user}', [PublicController::class, 'user'])->name('user');
 Route::middleware('auth')->group(function () {
     Route::resource('/admin/posts', PostController::class);
 
+    Route::get('/admin/profiles', [ProfileController::class, 'index'])->name('profiles.index');
     Route::post('/post/{post}', [PublicController::class, 'comment'])->name('comment');
     Route::get('/post/{post}/like', [PublicController::class, 'like'])->name('like');
 
